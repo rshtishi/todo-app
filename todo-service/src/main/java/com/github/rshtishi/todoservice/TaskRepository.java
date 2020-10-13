@@ -1,19 +1,19 @@
 package com.github.rshtishi.todoservice;
 
-import java.time.LocalDateTime;
-
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.reactive.ReactiveSortingRepository;
+import org.springframework.stereotype.Repository;
 
 import com.github.rshtishi.todoservice.entity.Task;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface TaskRepository extends ReactiveCrudRepository<Task, String> {
+@Repository
+public interface TaskRepository extends ReactiveSortingRepository<Task, String> {
 
-	Flux<Task> findAllOrderByScheduledDesc();
 
-	Flux<Task> findByScheduledOrderByScheduledDesc(Mono<LocalDateTime> scheduled);
+	//Flux<Task> findByScheduledOrderByScheduledDesc(Mono<LocalDateTime> scheduled);
 
 	Mono<Task> save(Mono<Task> task);
 

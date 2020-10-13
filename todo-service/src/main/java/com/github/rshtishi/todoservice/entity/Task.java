@@ -8,13 +8,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.github.rshtishi.todoservice.enums.PriorityType;
 import com.github.rshtishi.todoservice.enums.StatusType;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Document
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class Task {
 	
 	@Id
