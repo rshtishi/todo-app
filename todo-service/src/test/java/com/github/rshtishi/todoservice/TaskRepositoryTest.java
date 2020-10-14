@@ -66,11 +66,27 @@ class TaskRepositoryTest {
 	@Order(3)
 	void testFindAllOrdered() {
 		// setup
-		String expectedId = "2";
+		List<Task> expectedTask = Arrays.asList(
+				new Task("2", "Congratulate Krist for his birthday", LocalDateTime.of(2020, 10, 16, 1, 0),
+						StatusType.PENDING, PriorityType.MEDIUM),
+				new Task("1", "Check emails", LocalDateTime.of(2020, 10, 15, 1, 0), StatusType.PENDING,
+						PriorityType.MEDIUM));
 		// execute
-		Flux<Task> fluxTask = taskRepository.findAll(Sort.by(Sort.Direction.DESC, "scheduled"));
+		Flux<Task> taskFlux = taskRepository.findAll(Sort.by(Sort.Direction.DESC, "scheduled"));
 		// verify
-		StepVerifier.create(fluxTask).expectNextMatches(t  -> t.getId().equals(expectedId)).verifyComplete();
+		StepVerifier.create(taskFlux).expectNext(expectedTask.get(0)).expectNext(expectedTask.get(1)).expectComplete()
+				.verify();
+	}
+	
+	@Test
+	@Order(4)
+	void testDeleteById() {
+		//setup
+		String id = "1";
+		//execute
+		Mono<Void> result = taskRepository.deleteById(id);
+		//verify
+		StepVerifier.create(result).verifyComplete();
 	}
 
 }

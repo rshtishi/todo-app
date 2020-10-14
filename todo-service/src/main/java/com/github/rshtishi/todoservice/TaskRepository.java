@@ -12,9 +12,6 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface TaskRepository extends ReactiveSortingRepository<Task, String> {
 
-
-	//Flux<Task> findByScheduledOrderByScheduledDesc(Mono<LocalDateTime> scheduled);
-
 	Mono<Task> save(Mono<Task> task);
 
 }
