@@ -2,27 +2,26 @@ package com.github.rshtishi.todoservice.service;
 
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
-import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
 
 import com.github.rshtishi.todoservice.TaskRepository;
+import com.github.rshtishi.todoservice.dto.TaskDto;
 import com.github.rshtishi.todoservice.entity.Task;
 import com.github.rshtishi.todoservice.enums.PriorityType;
 import com.github.rshtishi.todoservice.enums.StatusType;
 
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.GroupedFlux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 class TaskServiceImplUnitTest {
@@ -31,6 +30,8 @@ class TaskServiceImplUnitTest {
 	private TaskServiceImpl taskService;
 	@Mock
 	private TaskRepository taskRepository;
+	@Mock
+	private ModelMapper modelMapper;
 
 	@BeforeEach
 	void setup() {
@@ -62,6 +63,21 @@ class TaskServiceImplUnitTest {
 		StepVerifier.create(taskListFluxReturned).expectNext(expectedFirst).expectNext(expectedSecond).expectComplete()
 				.verify();
 
+	}
+
+	@Test
+	void testCreateTask() {
+		// setup
+		ModelMapper mapper = new ModelMapper();
+		TaskDto taskDto = new TaskDto("Send Email to Customer", LocalDateTime.now(), PriorityType.LOW);
+		Task task = mapper.map(taskDto, Task.class);
+		task.setId("1");
+		when(modelMapper.map(taskDto, Task.class)).thenReturn(task);
+		when(taskRepository.save(task)).thenReturn(Mono.just(task));
+		// execute
+		Mono<Task> taskMono = taskService.createTask(taskDto);
+		// verify
+		StepVerifier.create(taskMono).expectNextMatches(t -> t.getId().equals(task.getId())).expectComplete().verify();
 	}
 
 }
