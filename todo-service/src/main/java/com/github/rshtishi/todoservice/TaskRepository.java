@@ -11,5 +11,7 @@ import reactor.core.publisher.Mono;
 public interface TaskRepository extends ReactiveSortingRepository<Task, String> {
 
 	Mono<Task> save(Mono<Task> task);
+	
+	Mono<Task> findById(String id);
 
 }

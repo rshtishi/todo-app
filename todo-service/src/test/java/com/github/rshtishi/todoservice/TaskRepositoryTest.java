@@ -1,5 +1,7 @@
 package com.github.rshtishi.todoservice;
 
+import static org.mockito.Mockito.when;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -77,16 +79,29 @@ class TaskRepositoryTest {
 		StepVerifier.create(taskFlux).expectNext(expectedTask.get(0)).expectNext(expectedTask.get(1)).expectComplete()
 				.verify();
 	}
-	
+
 	@Test
 	@Order(4)
 	void testDeleteById() {
-		//setup
+		// setup
 		String id = "1";
-		//execute
+		// execute
 		Mono<Void> result = taskRepository.deleteById(id);
-		//verify
+		// verify
 		StepVerifier.create(result).verifyComplete();
+	}
+
+	@Test
+	@Order(5)
+	void testFindById() {
+		// setup
+		String id = "1";
+		Task expectedTask = new Task("1", "Check emails", LocalDateTime.of(2020, 10, 15, 1, 0), StatusType.PENDING,
+				PriorityType.MEDIUM);
+		// execute
+		Mono<Task> monoTask = taskRepository.findById(id);
+		// verify
+		StepVerifier.create(monoTask).expectNext(expectedTask).verifyComplete();
 	}
 
 }
