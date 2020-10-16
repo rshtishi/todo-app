@@ -16,6 +16,6 @@ public interface TaskService {
 
 	public Mono<Task> updateTask(String id, TaskDto taskDto);
 	
-	
+	public Mono<Void> deleteTaskById(String id);
 
 }

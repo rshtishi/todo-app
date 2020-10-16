@@ -110,4 +110,16 @@ class TaskServiceImplUnitTest {
 		StepVerifier.create(taskUpdatedMono).expectNext(task).expectComplete().verify();
 	}
 
+	@Test
+	void testDeleteTask() {
+		// setup
+		String id = "1";
+		when(taskRepository.deleteById(id)).thenReturn(Mono.empty());
+		// execute
+		Mono<Void> result = taskService.deleteTaskById(id);
+		// verify
+		StepVerifier.create(result).verifyComplete();
+		verify(taskRepository).deleteById(id);
+	}
+
 }
