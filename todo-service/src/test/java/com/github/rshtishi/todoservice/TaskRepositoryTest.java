@@ -1,7 +1,5 @@
 package com.github.rshtishi.todoservice;
 
-import static org.mockito.Mockito.when;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;

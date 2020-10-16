@@ -1,5 +1,9 @@
 package com.github.rshtishi.todoservice.service;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -12,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 
 import com.github.rshtishi.todoservice.TaskRepository;
@@ -23,6 +28,7 @@ import com.github.rshtishi.todoservice.enums.StatusType;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+import org.modelmapper.config.Configuration;
 
 class TaskServiceImplUnitTest {
 
@@ -78,6 +84,30 @@ class TaskServiceImplUnitTest {
 		Mono<Task> taskMono = taskService.createTask(taskDto);
 		// verify
 		StepVerifier.create(taskMono).expectNextMatches(t -> t.getId().equals(task.getId())).expectComplete().verify();
+	}
+
+	@Test
+	void testUpdateTask() {
+		// setup
+		ModelMapper mapper = new ModelMapper();
+		mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+		String id = "1";
+		TaskDto taskDto = new TaskDto("Send Email to Customer", LocalDateTime.now(), PriorityType.LOW);
+		Task task = new Task(id, "Congratulate Krist for his birthday", LocalDateTime.of(2020, 10, 16, 1, 0),
+				StatusType.PENDING, PriorityType.MEDIUM);
+		Task taskUpdated = mapper.map(taskDto, Task.class);
+		mapper.map(taskUpdated, task);
+		Configuration configuration = mock(Configuration.class);
+		when(configuration.setPropertyCondition(Conditions.isNotNull())).thenReturn(configuration);
+		when(modelMapper.getConfiguration()).thenReturn(configuration);
+		when(modelMapper.map(taskDto, Task.class)).thenReturn(mapper.map(taskDto, Task.class));
+		when(taskRepository.findById(id)).thenReturn(Mono.just(task));
+		when(taskRepository.save(Mockito.any())).thenReturn(Mono.just(taskUpdated));
+		doNothing().when(modelMapper).map(task, taskUpdated);
+		// execute
+		Mono<Task> taskUpdatedMono = taskService.updateTask(id, taskDto);
+		// verify
+		StepVerifier.create(taskUpdatedMono).expectNext(task).expectComplete().verify();
 	}
 
 }

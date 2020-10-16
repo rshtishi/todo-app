@@ -2,7 +2,10 @@ package com.github.rshtishi.todoservice.service;
 
 import java.util.List;
 
+import org.modelmapper.Condition;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.config.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -38,8 +41,15 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public Mono<Task> updateTask(String id, TaskDto taskDto) {
-		
-		return null;
+		modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+		Task task = modelMapper.map(taskDto, Task.class);
+		Mono<Task> updatedTaskMono = taskRepository.save(task).zipWith(taskRepository.findById(id)).map(tuple -> {
+			modelMapper.map(tuple.getT1(), tuple.getT2());
+			return tuple.getT2();
+		});
+		;
+		return updatedTaskMono;
 	}
+	
 
 }
