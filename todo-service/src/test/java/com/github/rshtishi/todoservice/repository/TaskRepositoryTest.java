@@ -1,4 +1,4 @@
-package com.github.rshtishi.todoservice;
+package com.github.rshtishi.todoservice.repository;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import com.github.rshtishi.todoservice.entity.Task;
 import com.github.rshtishi.todoservice.enums.PriorityType;
 import com.github.rshtishi.todoservice.enums.StatusType;
+import com.github.rshtishi.todoservice.repository.TaskRepository;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

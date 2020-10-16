@@ -1,4 +1,4 @@
-package com.github.rshtishi.todoservice;
+package com.github.rshtishi.todoservice.repository;
 
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import org.springframework.stereotype.Repository;

@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.github.rshtishi.todoservice.TaskRepository;
 import com.github.rshtishi.todoservice.dto.TaskDto;
 import com.github.rshtishi.todoservice.entity.Task;
 import com.github.rshtishi.todoservice.enums.StatusType;
+import com.github.rshtishi.todoservice.repository.TaskRepository;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
